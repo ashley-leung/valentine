@@ -16,7 +16,6 @@
       --radius: 18px;
     }
 
-    /* Page */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -32,7 +31,6 @@
       overflow:hidden;
     }
 
-    /* Floating hearts around the card (decor) */
     .hearts{
       position:fixed;
       inset:0;
@@ -84,7 +82,6 @@
       50%{ transform: translate(-50%,-50%) translateY(-10px) rotate(2deg) }
     }
 
-    /* The cute browser window */
     .wrap{
       width:min(420px, 92vw);
       aspect-ratio: 1 / 1;
@@ -173,7 +170,6 @@
       color: var(--pink);
       font-weight: 900;
       letter-spacing:.02em;
-      /* A “handwritten-ish” fallback stack */
       font-family: "Segoe Script", "Bradley Hand", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
       text-shadow: 0 2px 0 rgba(58,44,47,.06);
     }
@@ -205,7 +201,6 @@
       outline-offset: 3px;
     }
 
-    /* Second step: yes/no row */
     .yn{
       display:flex;
       gap:12px;
@@ -217,7 +212,6 @@
       background: #fff;
     }
 
-    /* Celebration confetti */
     .confetti{
       position:fixed;
       inset:0;
@@ -243,7 +237,6 @@
       }
     }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       .heart, .cursor{ animation: none !important; }
       .btn{ transition:none; }
@@ -251,7 +244,6 @@
   </style>
 </head>
 <body>
-  <!-- Decorative hearts (positioned like your reference image) -->
   <div class="hearts" aria-hidden="true">
     <div class="heart" style="left:22%; top:18%; animation-delay:.2s;"></div>
     <div class="heart outline" style="left:82%; top:18%; animation-delay:.6s;"></div>
@@ -274,11 +266,7 @@
       <div class="content">
         <div class="kicker" id="kicker">WELCOME TO</div>
 
-        <!-- EDIT THESE TEXTS ↓ -->
-        <h1 class="script" id="headline">Will you be my…<br/>Valentine? 💖</h1>
-        <!-- EDIT THESE TEXTS ↑ -->
-
-
+        <h1 class="script" id="headline">Will you be my…<br/>Valentine? 🩷</h1>
         <div class="btnRow" id="step2">
           <div class="yn">
             <button class="btn" id="yesBtn">YES! 💘</button>
@@ -288,7 +276,6 @@
       </div>
     </section>
 
-    <!-- Cute cursor pointing at the button, like the reference -->
     <div class="cursor" aria-hidden="true">
       <svg viewBox="0 0 64 64" fill="none">
         <path d="M16 8 L44 36 L32 38 L39 54 L32 58 L25 42 L16 52 Z"
@@ -302,7 +289,6 @@
   <div class="confetti" id="confetti" aria-hidden="true"></div>
 
   <script>
-    // Simple, cute flow: NEXT -> Yes/No -> Celebrate
     const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
 
     const yesBtn  = document.getElementById('yesBtn');
@@ -317,14 +303,12 @@
 
     const confettiLayer = document.getElementById('confetti');
 
-    // Playful "No" dodge inside the content area
     let noCount = 0;
     const contentEl = document.querySelector('.content');
 
     function moveNoButton() {
       noCount++;
 
-      // after a few tries, gently nudge them
       if (noCount >= 5) {
         noBtn.disabled = true;
         noBtn.style.opacity = 0.65;
@@ -338,7 +322,6 @@
         return;
       }
 
-      // compute a random position within the content box
       const box = contentEl.getBoundingClientRect();
       const btn = noBtn.getBoundingClientRect();
 
@@ -347,21 +330,19 @@
       const maxY = box.height - btn.height - padding;
 
       const x = Math.max(padding, Math.random() * maxX);
-      const y = Math.max(padding + 40, Math.random() * maxY); // keep away from top text
+      const y = Math.max(padding + 40, Math.random() * maxY);
 
       noBtn.style.position = "absolute";
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
     }
 
-    // Dodge on hover (desktop) and on click (mobile)
     let isFlashing = false;
     let imageIndex = 1;
     noBtn.addEventListener('mouseenter', () => {
       if (!prefersReduced && !isFlashing) {
         isFlashing = true;
 
-        // Flash image (alternates through 1.jpg to 6.jpg)
         const img = document.createElement('img');
         img.src = `${imageIndex}.jpg`;
         img.style.position = 'fixed';
@@ -377,21 +358,17 @@
         img.style.transition = 'opacity 1s ease';
         document.body.appendChild(img);
 
-        // If this is the final image (6), keep it displayed
         if (imageIndex === 6) {
           imageIndex = 6
         } else {
-        // Cycle to next image (1-6)
-        imageIndex = imageIndex + 1;
+          imageIndex = imageIndex + 1;
         }
 
-        // Show image briefly before fading out and moving button
         setTimeout(() => {
           img.style.opacity = '0';
           moveNoButton();
         }, 60);
 
-        // Remove after fade completes
         setTimeout(() => {
           img.remove();
           isFlashing = false;
@@ -403,9 +380,7 @@
       moveNoButton();
     });
 
-    // YES: celebrate + swap content
     yesBtn.addEventListener('click', () => {
-      // Flash yay.jpg image
       const img = document.createElement('img');
       img.src = 'yay.jpg';
       img.style.position = 'fixed';
@@ -421,21 +396,18 @@
       img.style.transition = 'opacity 1s ease';
       document.body.appendChild(img);
 
-      // Update content and start confetti immediately
       step2.hidden = true;
-      kicker.textContent = "AWWWWW!";
-      headline.innerHTML = "It's a date! 💞<br/>Happy Valentine's!";
+      kicker.textContent = "MY LITTLE BABYYYY";
+      headline.innerHTML = "🩷<br/>Happy Valentine's!";
       if (!prefersReduced) burstConfetti(120);
 
-      // Immediately start fading out
       setTimeout(() => {
         img.style.opacity = '0';
-      }, 10);
+      }, 300);
 
-      // Remove after fade completes
       setTimeout(() => {
         img.remove();
-      }, 1010);
+      }, 1300);
     });
 
     function burstConfetti(count = 80) {
@@ -453,17 +425,14 @@
         piece.style.setProperty('--dx', dx + "px");
         piece.style.setProperty('--rot', rot);
 
-        // alternate a few cute pinks/whites without external assets
         const colors = ["#ff6b9a", "#ff8fb3", "#ffd5e3", "#fff7fb"];
         piece.style.background = colors[Math.floor(Math.random() * colors.length)];
 
-        // random sizes
         const ww = 6 + Math.random() * 8;
         const hh = 10 + Math.random() * 10;
         piece.style.width = ww + "px";
         piece.style.height = hh + "px";
 
-        // stagger the start a bit
         piece.style.animationDelay = (Math.random() * 0.25) + "s";
         piece.style.borderRadius = (2 + Math.random() * 5) + "px";
 
