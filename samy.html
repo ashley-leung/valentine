@@ -309,18 +309,6 @@
     function moveNoButton() {
       noCount++;
 
-      if (noCount >= 5) {
-        noBtn.disabled = true;
-        noBtn.style.opacity = 0.65;
-        noBtn.textContent = "OK OK 😇";
-        const msg = document.createElement('div');
-        msg.textContent = "Okay okay… try “YES” 😇";
-        msg.style.marginTop = "8px";
-        msg.style.fontWeight = "800";
-        msg.style.color = "#7a5b61";
-        contentEl.appendChild(msg);
-        return;
-      }
 
       const box = contentEl.getBoundingClientRect();
       const btn = noBtn.getBoundingClientRect();
@@ -335,6 +323,18 @@
       noBtn.style.position = "absolute";
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
+
+      if (noCount >= 5) {
+        noBtn.disabled = true;
+        noBtn.style.opacity = 0.65;
+        noBtn.textContent = "OK OK 😇";
+        const msg = document.createElement('div');
+        msg.textContent = "Okay okay… try “YES” 😇";
+        msg.style.marginTop = "8px";
+        msg.style.fontWeight = "800";
+        msg.style.color = "#7a5b61";
+        contentEl.appendChild(msg);
+      }
     }
 
     let isFlashing = false;
