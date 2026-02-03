@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my Valentine?</title>
+  <style>
+    :root{
+      --bg:#fde7ee;
+      --pink:#ff6b9a;
+      --pink2:#ff8fb3;
+      --line:#3a2c2f;
+      --soft:#fff7fb;
+      --shadow: 0 14px 30px rgba(58,44,47,.12);
+      --shadow2: 0 6px 0 rgba(58,44,47,.14);
+      --radius: 18px;
+    }
+
+    /* Page */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(900px 500px at 50% 10%, #fff7fb 0%, rgba(255,247,251,0) 60%),
+        radial-gradient(700px 500px at 50% 90%, rgba(255,107,154,.18) 0%, rgba(255,107,154,0) 62%),
+        var(--bg);
+      font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      color: #3a2c2f;
+      overflow:hidden;
+    }
+
+    /* Floating hearts around the card (decor) */
+    .hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.95;
+    }
+    .heart{
+      position:absolute;
+      width:26px;
+      height:26px;
+      transform: translate(-50%,-50%) rotate(0deg);
+      filter: drop-shadow(0 10px 10px rgba(58,44,47,.12));
+      animation: floaty 4.6s ease-in-out infinite;
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:14px;
+      height:20px;
+      background: var(--pink2);
+      border-radius: 14px 14px 8px 8px;
+      top:6px;
+      left:6px;
+    }
+    .heart::before{
+      transform: rotate(-45deg);
+      transform-origin: bottom left;
+      left:6px;
+    }
+    .heart::after{
+      transform: rotate(45deg);
+      transform-origin: bottom right;
+      left:6px;
+    }
+    .heart.outline::before,.heart.outline::after{
+      background: transparent;
+      border: 2px solid var(--pink);
+      top:5px;
+      left:5px;
+      width:14px;
+      height:20px;
+    }
+    .heart.small{width:16px;height:16px;opacity:.9}
+    .heart.small::before,.heart.small::after{width:9px;height:13px;top:3px;left:3px}
+    .heart.small.outline::before,.heart.small.outline::after{top:2px;left:2px}
+
+    @keyframes floaty{
+      0%,100%{ transform: translate(-50%,-50%) translateY(0) rotate(-2deg) }
+      50%{ transform: translate(-50%,-50%) translateY(-10px) rotate(2deg) }
+    }
+
+    /* The cute browser window */
+    .wrap{
+      width:min(420px, 92vw);
+      aspect-ratio: 1 / 1;
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+    .window{
+      width:min(360px, 92vw);
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      transform: translateY(8px);
+    }
+
+    .topbar{
+      height:44px;
+      background: #fff;
+      border-bottom: 2px solid var(--line);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      border:2px solid var(--line);
+      background: #fff;
+    }
+    .address{
+      flex:1;
+      height:26px;
+      border:2px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      letter-spacing:.08em;
+      color: #7a5b61;
+      position:relative;
+    }
+    .address span{
+      transform: translateY(1px);
+      user-select:none;
+    }
+    .close{
+      width:20px;height:20px;
+      border:2px solid var(--line);
+      border-radius:6px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      line-height:1;
+      font-size:12px;
+      background:#fff;
+      user-select:none;
+    }
+
+    .content{
+      padding: 38px 18px 34px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      background:
+        radial-gradient(400px 220px at 50% 0%, rgba(255,143,179,.20) 0%, rgba(255,143,179,0) 60%),
+        #fff;
+    }
+
+    .kicker{
+      font-size:12px;
+      letter-spacing:.18em;
+      color:#7a5b61;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .script{
+      margin: 0 0 26px;
+      font-size: 30px;
+      line-height: 1.05;
+      color: var(--pink);
+      font-weight: 900;
+      letter-spacing:.02em;
+      /* A “handwritten-ish” fallback stack */
+      font-family: "Segoe Script", "Bradley Hand", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
+      text-shadow: 0 2px 0 rgba(58,44,47,.06);
+    }
+
+    .btnRow{
+      display:grid;
+      place-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      border:2px solid var(--line);
+      background: #ffd5e3;
+      color: #3a2c2f;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-weight:800;
+      letter-spacing:.08em;
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, filter .12s ease;
+      min-width: 120px;
+    }
+    .btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .btn:active{ transform: translateY(1px); box-shadow: 0 3px 0 rgba(58,44,47,.14); }
+    .btn:focus-visible{
+      outline: 3px solid rgba(255,107,154,.45);
+      outline-offset: 3px;
+    }
+
+    /* Second step: yes/no row */
+    .yn{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+    .btn.ghost{
+      background: #fff;
+    }
+
+    /* Celebration confetti */
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .confetti i{
+      position:absolute;
+      width:10px;
+      height:14px;
+      background: var(--pink);
+      border-radius: 3px;
+      top:-20px;
+      left:0;
+      opacity:.9;
+      transform: rotate(0deg);
+      animation: fall 1.7s linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translate3d(var(--dx), 110vh, 0) rotate(var(--rot));
+        opacity: .98;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .heart, .cursor{ animation: none !important; }
+      .btn{ transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative hearts (positioned like your reference image) -->
+  <div class="hearts" aria-hidden="true">
+    <div class="heart" style="left:22%; top:18%; animation-delay:.2s;"></div>
+    <div class="heart outline" style="left:82%; top:18%; animation-delay:.6s;"></div>
+    <div class="heart small" style="left:86%; top:30%; animation-delay:1.0s;"></div>
+    <div class="heart small outline" style="left:18%; top:36%; animation-delay:1.3s;"></div>
+    <div class="heart" style="left:78%; top:84%; animation-delay:.4s;"></div>
+    <div class="heart outline" style="left:18%; top:84%; animation-delay:.9s;"></div>
+  </div>
+
+  <main class="wrap">
+    <section class="window" role="dialog" aria-label="Valentine website">
+      <header class="topbar">
+        <div class="dot" aria-hidden="true"></div>
+        <div class="dot" aria-hidden="true"></div>
+        <div class="dot" aria-hidden="true"></div>
+        <div class="address" aria-hidden="true"><span>https://samy-and-ash.com</span></div>
+        <div class="close" aria-hidden="true">×</div>
+      </header>
+
+      <div class="content">
+        <div class="kicker" id="kicker">WELCOME TO</div>
+
+        <!-- EDIT THESE TEXTS ↓ -->
+        <h1 class="script" id="headline">Will you be my…<br/>Valentine? 💖</h1>
+        <!-- EDIT THESE TEXTS ↑ -->
+
+
+        <div class="btnRow" id="step2">
+          <div class="yn">
+            <button class="btn" id="yesBtn">YES! 💘</button>
+            <button class="btn ghost" id="noBtn">NO 😅</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cute cursor pointing at the button, like the reference -->
+    <div class="cursor" aria-hidden="true">
+      <svg viewBox="0 0 64 64" fill="none">
+        <path d="M16 8 L44 36 L32 38 L39 54 L32 58 L25 42 L16 52 Z"
+              fill="#fff" stroke="#3a2c2f" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M34 44 C36 42 41 42 43 46 C45 50 42 54 38 54 C34 54 32 50 34 48"
+              fill="none" stroke="#ff6b9a" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </main>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script>
+    // Simple, cute flow: NEXT -> Yes/No -> Celebrate
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    const yesBtn  = document.getElementById('yesBtn');
+    const noBtn   = document.getElementById('noBtn');
+
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+
+    const headline = document.getElementById('headline');
+    const kicker = document.getElementById('kicker');
+
+    const confettiLayer = document.getElementById('confetti');
+
+    // Playful "No" dodge inside the content area
+    let noCount = 0;
+    const contentEl = document.querySelector('.content');
+
+    function moveNoButton() {
+      noCount++;
+
+      // after a few tries, gently nudge them
+      if (noCount >= 5) {
+        noBtn.disabled = true;
+        noBtn.style.opacity = 0.65;
+        noBtn.textContent = "OK OK 😇";
+        const msg = document.createElement('div');
+        msg.textContent = "Okay okay… try “YES” 😇";
+        msg.style.marginTop = "8px";
+        msg.style.fontWeight = "800";
+        msg.style.color = "#7a5b61";
+        contentEl.appendChild(msg);
+        return;
+      }
+
+      // compute a random position within the content box
+      const box = contentEl.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
+
+      const padding = 16;
+      const maxX = box.width - btn.width - padding;
+      const maxY = box.height - btn.height - padding;
+
+      const x = Math.max(padding, Math.random() * maxX);
+      const y = Math.max(padding + 40, Math.random() * maxY); // keep away from top text
+
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    // Dodge on hover (desktop) and on click (mobile)
+    let isFlashing = false;
+    let imageIndex = 1;
+    noBtn.addEventListener('mouseenter', () => {
+      if (!prefersReduced && !isFlashing) {
+        isFlashing = true;
+
+        // Flash image (alternates through 1.jpg to 6.jpg)
+        const img = document.createElement('img');
+        img.src = `${imageIndex}.jpg`;
+        img.style.position = 'fixed';
+        img.style.top = '50%';
+        img.style.left = '50%';
+        img.style.transform = 'translate(-50%, -50%)';
+        img.style.maxWidth = '90vw';
+        img.style.maxHeight = '90vh';
+        img.style.zIndex = '9999';
+        img.style.boxShadow = '0 0 30px rgba(0,0,0,0.5)';
+        img.style.borderRadius = '10px';
+        img.style.opacity = '1';
+        img.style.transition = 'opacity 1s ease';
+        document.body.appendChild(img);
+
+        // If this is the final image (6), keep it displayed
+        if (imageIndex === 6) {
+          imageIndex = 6
+        } else {
+        // Cycle to next image (1-6)
+        imageIndex = imageIndex + 1;
+        }
+
+        // Show image briefly before fading out and moving button
+        setTimeout(() => {
+          img.style.opacity = '0';
+          moveNoButton();
+        }, 60);
+
+        // Remove after fade completes
+        setTimeout(() => {
+          img.remove();
+          isFlashing = false;
+        }, 1300);
+      }
+    });
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // YES: celebrate + swap content
+    yesBtn.addEventListener('click', () => {
+      // Flash yay.jpg image
+      const img = document.createElement('img');
+      img.src = 'yay.jpg';
+      img.style.position = 'fixed';
+      img.style.top = '50%';
+      img.style.left = '50%';
+      img.style.transform = 'translate(-50%, -50%)';
+      img.style.maxWidth = '90vw';
+      img.style.maxHeight = '90vh';
+      img.style.zIndex = '9999';
+      img.style.boxShadow = '0 0 30px rgba(0,0,0,0.5)';
+      img.style.borderRadius = '10px';
+      img.style.opacity = '1';
+      img.style.transition = 'opacity 1s ease';
+      document.body.appendChild(img);
+
+      // Update content and start confetti immediately
+      step2.hidden = true;
+      kicker.textContent = "AWWWWW!";
+      headline.innerHTML = "It's a date! 💞<br/>Happy Valentine's!";
+      if (!prefersReduced) burstConfetti(120);
+
+      // Immediately start fading out
+      setTimeout(() => {
+        img.style.opacity = '0';
+      }, 10);
+
+      // Remove after fade completes
+      setTimeout(() => {
+        img.remove();
+      }, 1010);
+    });
+
+    function burstConfetti(count = 80) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('i');
+
+        const startX = Math.random() * w;
+        const dx = (Math.random() * 2 - 1) * (w * 0.35);
+        const rot = (Math.random() * 720 - 360) + "deg";
+
+        piece.style.left = startX + "px";
+        piece.style.setProperty('--dx', dx + "px");
+        piece.style.setProperty('--rot', rot);
+
+        // alternate a few cute pinks/whites without external assets
+        const colors = ["#ff6b9a", "#ff8fb3", "#ffd5e3", "#fff7fb"];
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        // random sizes
+        const ww = 6 + Math.random() * 8;
+        const hh = 10 + Math.random() * 10;
+        piece.style.width = ww + "px";
+        piece.style.height = hh + "px";
+
+        // stagger the start a bit
+        piece.style.animationDelay = (Math.random() * 0.25) + "s";
+        piece.style.borderRadius = (2 + Math.random() * 5) + "px";
+
+        confettiLayer.appendChild(piece);
+
+        // cleanup
+        piece.addEventListener('animationend', () => piece.remove());
+      }
+    }
+
+  </script>
+</body>
+</html>
